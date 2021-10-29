@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: buoy-sre-api
+  labels:
+    app: buoy-sre-api
+spec:
+  containers:
+    - name: buoy-sre-api
+      resources:
+        limits:
+          cpu: "1"
+          memory: 512Mi
+        requests:
+          cpu: 200m
+          memory: 250Mi
+      image: buoy-sre-api:latest
+      imagePullPolicy: Never
+      ports:
+        - containerPort: 5000
+          name: buoy-sre-api
+      livenessProbe:
+        httpGet:
+          path: /comment
+          port: buoy-sre-api
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        failureThreshold: 6
+        timeoutSeconds: 5
+  restartPolicy: Always
